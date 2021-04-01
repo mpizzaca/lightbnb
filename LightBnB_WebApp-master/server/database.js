@@ -101,14 +101,14 @@ const getAllProperties = function(options, limit = 10) {
   let queryString = `
     SELECT properties.*, avg(property_reviews.rating) as average_rating
     FROM properties
-    JOIN property_reviews ON properties.id = property_id
+    LEFT OUTER JOIN property_reviews ON properties.id = property_id
     WHERE TRUE
     `;
   
   // check if any options were provided, add them to query 
   if (options.city) {
     queryParams.push(`%${options.city}%`);
-    queryString += `AND city LIKE $${queryParams.length} `;
+    queryString += `AND city ILIKE $${queryParams.length} `;
   }
   if (options.owner_id) {
     queryParams.push(options.owner_id);
@@ -147,9 +147,18 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+  // adjust cost to cents
+  property.cost_per_night *= 100;
+
+  console.log(property);
+
+  return pool.query(`
+    INSERT INTO properties (owner_id, title, description, thumbnail_photo_url, 
+      cover_photo_url, cost_per_night, parking_spaces, number_of_bathrooms, 
+      number_of_bedrooms, country, street, city, province, post_code)
+    VALUES ($14, $1, $2, $7, $8, $6, $5, $4, $3, $10, $9, $11, $12, $13)
+    RETURNING *;
+  `, Object.values(property))
+  .then(res => res.rows[0]);
 }
 exports.addProperty = addProperty;
