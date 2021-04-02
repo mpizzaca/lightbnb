@@ -24,6 +24,19 @@ $(() => {
       const listing = propertyListing.createListing(property, isReservation);
       addListing(listing);
     }
+
+    $(function () {
+      // setup datepickers
+      $('.date_picker').each(function () {
+        $(this).datepicker();
+      });
+      // setup 'Book Me' buttons
+      $('.property-listing').each(function() {
+        $(this).find('button').first().click(() => {
+          $(this).find('.property-listing__book__date-pickers').first().toggle();
+        });
+      });
+    });
   }
   window.propertyListings.addProperties = addProperties;
 

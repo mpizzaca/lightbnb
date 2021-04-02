@@ -30,6 +30,11 @@
       padding: 0;
     }
   }
+  &__book {
+    &__date-pickers {
+      display: none;
+    }
+  }
 }
 
 @media screen and (max-width: 400px) {

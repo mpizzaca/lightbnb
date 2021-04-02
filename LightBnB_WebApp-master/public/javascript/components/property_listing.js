@@ -21,6 +21,13 @@ $(() => {
             <div class="property-listing__rating">${Math.round(property.average_rating * 100) / 100}/5 stars</div>
             <div class="property-listing__price">$${property.cost_per_night/100.0}/night</div>
           </footer>
+          <section class="property-listing__book">
+            <button>Book Me</button>
+            <section class="property-listing__book__date-pickers">
+              <p>Start Date: <input class="date_picker start_date" type="text"></p>
+              <p>End Date: <input class="date_picker end_date" type="text"></p>
+            </section>
+        </section>
         </section>
       </article>
     `
